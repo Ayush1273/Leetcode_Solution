@@ -1,0 +1,55 @@
+class Solution {
+public:
+    string reorganizeString(string s) {
+      std::vector<int> count(26, 0);
+        for (char c : s) {
+            count[c - 'a']++;
+        }
+        
+        std::priority_queue<std::pair<int, char>> maxHeap;
+        for (int i = 0; i < 26; ++i) {
+            if (count[i] > 0) {
+                maxHeap.push({count[i], 'a' + i});
+            }
+        }
+        
+        std::string result = "";
+        while (maxHeap.size() >= 2) {
+            auto first = maxHeap.top();
+            maxHeap.pop();
+            auto second = maxHeap.top();
+            maxHeap.pop();
+            
+            result += first.second;
+            result += second.second;
+            
+            if (--first.first > 0) {
+                maxHeap.push(first);
+            }
+            if (--second.first > 0) {
+                maxHeap.push(second);
+            }
+        }
+        
+        if (!maxHeap.empty()) {
+            if (maxHeap.top().first > 1) {
+                return "";
+            }
+            result += maxHeap.top().second;
+        }
+        
+        return result;
+    }
+
+
+int main() {
+    Solution solution;
+    std::string s = "aab"; // Example input string
+
+    std::string result = solution.reorganizeString(s);
+    std::cout << "Reorganized String: " << result << std::endl;
+
+    return 0;
+}   
+    
+};
