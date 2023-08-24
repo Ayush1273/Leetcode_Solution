@@ -1,0 +1,49 @@
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        std::vector<std::string> result;
+        
+        for (int i = 0, j; i < words.size(); i = j) {
+            int len = -1; // Initialize to -1 to account for space between words
+            for (j = i; j < words.size() && len + words[j].size() + 1 <= maxWidth; ++j) {
+                len += words[j].size() + 1;
+            }
+            
+            int spaces = 1, extra = 0;
+            if (j != i + 1 && j != words.size()) {
+                spaces = (maxWidth - len) / (j - i - 1) + 1;
+                extra = (maxWidth - len) % (j - i - 1);
+            }
+            
+            std::string line = words[i];
+            for (int k = i + 1; k < j; ++k) {
+                line += std::string(spaces, ' ');
+                if (extra > 0) {
+                    line += ' ';
+                    extra--;
+                }
+                line += words[k];
+            }
+            
+            line += std::string(maxWidth - line.size(), ' ');
+            result.push_back(line);
+        }
+        
+        return result;
+    }
+
+
+int main() {
+    Solution solution;
+    std::vector<std::string> words = {"This", "is", "an", "example", "of", "text", "justification."};
+    int maxWidth = 16;
+
+    std::vector<std::string> result = solution.fullJustify(words, maxWidth);
+    for (const std::string& line : result) {
+        std::cout << line << std::endl;
+    }
+
+    return 0;
+} 
+   
+};
