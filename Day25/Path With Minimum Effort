@@ -1,0 +1,61 @@
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+      int rows = heights.size();
+        int cols = heights[0].size();
+        
+        // Define the four possible directions: up, down, left, right.
+        vector<vector<int>> directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        
+        // Create a priority queue to store cells to visit based on their effort.
+        priority_queue<pair<int, pair<int, int>>> pq;
+        
+        // Create a 2D vector to store the minimum effort required to reach each cell.
+        vector<vector<int>> minEffort(rows, vector<int>(cols, INT_MAX));
+        
+        // Initialize the starting cell with (0, 0) and effort of 0.
+        pq.push({0, {0, 0}});
+        minEffort[0][0] = 0;
+        
+        while (!pq.empty()) {
+            int currEffort = -pq.top().first;  
+            int x = pq.top().second.first;     // Current row.
+            int y = pq.top().second.second;    // Current column.
+            pq.pop();
+            
+            if (x == rows - 1 && y == cols - 1) {
+                return currEffort;
+            }
+            
+            for (const auto& dir : directions) {
+                int newX = x + dir[0];
+                int newY = y + dir[1];
+                
+               
+                if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
+                    
+                    int newEffort = max(currEffort, abs(heights[x][y] - heights[newX][newY]));
+                    
+                  
+                    if (newEffort < minEffort[newX][newY]) {
+                        minEffort[newX][newY] = newEffort;
+                        pq.push({-newEffort, {newX, newY}});
+                    }
+                }
+            }
+        }
+        
+        
+        return -1;
+    }
+
+
+int main() {
+    Solution solution;
+    vector<vector<int>> heights = {{1,2,2},{3,8,2},{5,3,5}};
+    int result = solution.minimumEffortPath(heights);
+    cout << "Minimum effort required: " << result << endl;
+    return 0;
+}   
+    
+};
